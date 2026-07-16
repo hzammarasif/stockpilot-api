@@ -13,6 +13,7 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
 
     DATABASE_URL: str
+    SYNC_DATABASE_URL: str
 
     REDIS_URL: str
 
