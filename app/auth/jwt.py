@@ -2,6 +2,7 @@ from datetime import datetime, timedelta, UTC
 import jwt
 
 from app.core.config import settings
+from app.schemas.auth import TokenPayload
 
 
 def create_access_token(user_id: str) -> str:
@@ -33,9 +34,11 @@ def create_refresh_token(user_id: str) -> str:
     )
 
 
-def decode_token(token: str) -> dict:
-    return jwt.decode(
+def decode_token(token: str) -> TokenPayload:
+    payload = jwt.decode(
         token,
         settings.SECRET_KEY,
         algorithms=[settings.ALGORITHM],
     )
+
+    return TokenPayload.model_validate(payload)
