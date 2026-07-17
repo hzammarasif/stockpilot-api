@@ -2,7 +2,7 @@ from __future__ import annotations
 from datetime import datetime
 from typing import TYPE_CHECKING
 
-from sqlalchemy import Boolean, DateTime, ForeignKey, String, func
+from sqlalchemy import Boolean, DateTime, ForeignKey, String, func, text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base import Base
@@ -36,9 +36,9 @@ class User(TimestampMixin, Base):
 
     is_active: Mapped[bool] = mapped_column(
         Boolean,
-        default=True,
+        nullable=False,
+        server_default=text("true"),
     )
-
     role_id: Mapped[int] = mapped_column(
         ForeignKey("roles.id"),
         nullable=False,
