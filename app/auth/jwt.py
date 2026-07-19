@@ -5,9 +5,9 @@ from app.core.config import settings
 from app.schemas.auth import TokenPayload
 
 
-def create_access_token(user_id: str) -> str:
+def create_access_token(subject: str) -> str:
     payload = {
-        "sub": user_id,
+        "sub": subject,
         "type": "access",
         "exp": datetime.now(UTC)
         + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES),
@@ -19,9 +19,9 @@ def create_access_token(user_id: str) -> str:
         algorithm=settings.ALGORITHM,
     )
 
-def create_refresh_token(user_id: str) -> str:
+def create_refresh_token(subject: str) -> str:
     payload = {
-        "sub": user_id,
+        "sub": subject,
         "type": "refresh",
         "exp": datetime.now(UTC)
         + timedelta(days=settings.REFRESH_TOKEN_EXPIRE_DAYS),
