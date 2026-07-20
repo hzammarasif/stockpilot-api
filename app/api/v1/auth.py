@@ -1,7 +1,8 @@
 from fastapi import APIRouter, Depends
 from starlette import status
 
-from app.dependencies.auth import get_auth_service
+from app.dependencies.auth import get_auth_service, get_current_user
+from app.models.user import User
 from app.schemas.auth import Token, UserLogin, UserRegister
 from app.schemas.user import UserResponse
 from app.services.auth_service import AuthService
@@ -33,3 +34,14 @@ async def login(
     auth_service: AuthService = Depends(get_auth_service),
 ) -> Token:
     return await auth_service.login(data)
+
+
+
+@router.get(
+    "/me",
+    response_model=UserResponse,
+)
+async def me(
+    current_user: User = Depends(get_current_user),
+) -> UserResponse:
+    return UserResponse.model_validate(current_user)

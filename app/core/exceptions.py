@@ -16,3 +16,7 @@ class InvalidCredentialsException(StockPilotException):
 class UserNotFoundException(StockPilotException):
     status_code = 404
     detail = "User not found."
+
+class UnauthorizedException(StockPilotException):
+    status_code = 401
+    detail = "Unauthorized." 

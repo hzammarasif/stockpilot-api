@@ -1,6 +1,8 @@
 from datetime import datetime, timedelta, UTC
 import jwt
+from jwt import ExpiredSignatureError, InvalidTokenError
 
+from app.core.exceptions import UnauthorizedException
 from app.core.config import settings
 from app.schemas.auth import TokenPayload
 
@@ -35,10 +37,14 @@ def create_refresh_token(subject: str) -> str:
 
 
 def decode_token(token: str) -> TokenPayload:
-    payload = jwt.decode(
-        token,
-        settings.SECRET_KEY,
-        algorithms=[settings.ALGORITHM],
-    )
+    try:
+        payload = jwt.decode(
+            token,
+            settings.SECRET_KEY,
+            algorithms=[settings.ALGORITHM],
+        )
 
-    return TokenPayload.model_validate(payload)
+        return TokenPayload.model_validate(payload)
+
+    except (ExpiredSignatureError, InvalidTokenError):
+        raise UnauthorizedException()
