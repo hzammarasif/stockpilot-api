@@ -54,7 +54,7 @@ async def get_current_user(
         print("Wrong token type:", payload.type)
         raise UnauthorizedException()
 
-    user = await user_repository.get_by_id(int(payload.sub))
+    user = await user_repository.get_by_id_with_role(int(payload.sub))
     print("USER:", user)
 
     if not user:

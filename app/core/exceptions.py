@@ -20,3 +20,9 @@ class UserNotFoundException(StockPilotException):
 class UnauthorizedException(StockPilotException):
     status_code = 401
     detail = "Unauthorized." 
+
+
+class ForbiddenException(StockPilotException):
+    status_code = 401
+    detail = "You don't have permission to perform this action." 
+

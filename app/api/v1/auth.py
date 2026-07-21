@@ -5,6 +5,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 
 
 from app.dependencies.auth import get_auth_service, get_current_user
+from app.dependencies.roles import require_roles
 from app.models.user import User
 from app.schemas.auth import Token, UserLogin, UserRegister
 from app.schemas.user import UserResponse
@@ -59,3 +60,13 @@ async def me(
     current_user: User = Depends(get_current_user),
 ) -> UserResponse:
     return UserResponse.model_validate(current_user)
+
+
+@router.get("/admin-test")
+async def admin_test(
+    current_user: User = Depends(require_roles("employee")),
+):
+    return {
+        "message": "Welcome Admin",
+        "user": current_user.username,
+    }

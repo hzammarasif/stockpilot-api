@@ -1,4 +1,5 @@
 from sqlalchemy import select
+from sqlalchemy.orm import selectinload
 
 from app.models.user import User
 from app.repositories.base import BaseRepository
@@ -25,3 +26,13 @@ class UserRepository(BaseRepository[User]):
 
     async def exists_by_username(self, username: str) -> bool:
         return await self.exists(User.username == username)
+    
+    async def get_by_id_with_role(self, user_id: int) -> User | None:
+        stmt = (
+            select(User)
+            .options(selectinload(User.role))
+            .where(User.id == user_id)
+        )
+
+        result = await self.session.execute(stmt)
+        return result.scalar_one_or_none()
