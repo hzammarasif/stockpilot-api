@@ -1,5 +1,8 @@
 from fastapi import APIRouter, Depends
 from starlette import status
+from fastapi.security import OAuth2PasswordRequestForm
+
+
 
 from app.dependencies.auth import get_auth_service, get_current_user
 from app.models.user import User
@@ -29,10 +32,21 @@ async def register(
     response_model=Token,
     status_code=status.HTTP_200_OK,
 )
+
+
+
+
+@router.post("/login", response_model=Token)
 async def login(
-    data: UserLogin,
+    form_data: OAuth2PasswordRequestForm = Depends(),
     auth_service: AuthService = Depends(get_auth_service),
 ) -> Token:
+
+    data = UserLogin(
+        email=form_data.username,   # OAuth2 uses "username"
+        password=form_data.password,
+    )
+
     return await auth_service.login(data)
 
 

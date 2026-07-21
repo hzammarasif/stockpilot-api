@@ -26,6 +26,6 @@ class Token(BaseModel):
 
 
 class TokenPayload(BaseModel):
-    sub: UUID
+    sub: int
     type: Literal["access", "refresh"]
     exp: datetime

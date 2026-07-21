@@ -14,8 +14,7 @@ from app.repositories.user_repository import UserRepository
 from app.services.auth_service import AuthService
 
 
-
-oauth2_scheme = OAuth2PasswordBearer(           # Think of it as a token extractor
+oauth2_scheme = OAuth2PasswordBearer(
     tokenUrl="/api/v1/auth/login",
 )
 
@@ -41,17 +40,26 @@ def get_auth_service(
         session=session,
     )
 
-
 async def get_current_user(
     token: str = Depends(oauth2_scheme),
-    user_repository: UserRepository = Depends(get_user_repository) 
+    user_repository: UserRepository = Depends(get_user_repository),
 ) -> User:
+    print("=" * 50)
+    print("TOKEN:", token)
+
     payload = decode_token(token)
+    print("PAYLOAD:", payload)
+
     if payload.type != "access":
+        print("Wrong token type:", payload.type)
         raise UnauthorizedException()
-    user = await user_repository.get_by_id(payload.sub)
+
+    user = await user_repository.get_by_id(int(payload.sub))
+    print("USER:", user)
 
     if not user:
+        print("User not found")
         raise UnauthorizedException()
 
+    print("Authenticated successfully")
     return user
