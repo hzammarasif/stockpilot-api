@@ -26,3 +26,6 @@ class ForbiddenException(StockPilotException):
     status_code = 401
     detail = "You don't have permission to perform this action." 
 
+class CompanyAlreadyExistsException(Exception):
+    status_code = 401
+    detail = "The company with this name is already registered." 

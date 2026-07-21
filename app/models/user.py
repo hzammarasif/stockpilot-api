@@ -9,6 +9,7 @@ from app.db.base import Base
 from app.models.mixins import TimestampMixin
 if TYPE_CHECKING:
     from app.models.role import Role
+    from app.models.company import Company
 
 class User(TimestampMixin, Base):
     __tablename__ = "users"
@@ -39,11 +40,20 @@ class User(TimestampMixin, Base):
         nullable=False,
         server_default=text("true"),
     )
+    
     role_id: Mapped[int] = mapped_column(
         ForeignKey("roles.id"),
         nullable=False,
     )
 
     role: Mapped["Role"] = relationship(
+        back_populates="users"
+    )
+    company_id: Mapped[int | None] = mapped_column(
+        ForeignKey("companies.id"),
+        nullable=True,
+    )
+
+    company: Mapped["Company"] = relationship(
         back_populates="users"
     )
